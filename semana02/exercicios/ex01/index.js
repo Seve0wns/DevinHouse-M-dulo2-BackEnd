@@ -1,4 +1,5 @@
 import express from "express";
+import uuid4 from "uuid4";
 
 const app=express();
 const PORT=3333;
@@ -24,11 +25,15 @@ app.post("/pizzas",(req,res)=>{
 });
 
 app.get("/solicitations",(req,res)=>{
-    res.send(orders);
+    res.json(orders);
+});
+app.get("/solicitations/:id",(req,res)=>{
+    const id=req.params.id||"";
+    res.json(orders.filter(order=>order.id===id));
 });
 app.post("/solicitations",(req,res)=>{
     const {name,cpf,address,phone,payment,obs,order}=req.body;
-    const newOrder={name,cpf,address,phone,payment,obs:obs||"",order};
+    const newOrder={id:uuid4(),name,cpf,address,phone,payment,obs:obs||"",order};
     if(name&&cpf&&address&&phone&&payment&&order.length){
         orders.push(newOrder);
         return res.status(201).json(orders.at(pizzas.length-1));
